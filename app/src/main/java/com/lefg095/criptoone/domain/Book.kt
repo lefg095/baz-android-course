@@ -25,11 +25,11 @@ class Book(
     @SerializedName("maximum_price")
     var maximum_price: String = "",
     @Expose
-    @SerializedName("maximum_price")
+    @SerializedName("minimum_value")
     var minimum_value: String = "",
     @Expose
-    @SerializedName("maximum_price")
-    var maximum_value: String = "",
+    @SerializedName("maximum_value")
+    var maximum_value: String = ""
 ): Parcelable
 
 /*

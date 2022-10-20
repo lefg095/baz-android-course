@@ -6,5 +6,5 @@ import com.lefg095.criptoone.domain.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface IBookRepository {
-    fun getBooks(): Flow<DataState<BaseResponse<Book>>>
+    fun getBooks(): Flow<DataState<BaseResponse>>
 }

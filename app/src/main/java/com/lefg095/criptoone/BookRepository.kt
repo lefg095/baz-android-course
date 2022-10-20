@@ -12,7 +12,7 @@ class BookRepository(
 ) : IBookRepository {
 
     override fun getBooks(
-    ): Flow<DataState<BaseResponse<Book>>> = flow {
+    ): Flow<DataState<BaseResponse>> = flow {
         emit(DataState.Loading("Cargando Libros..."))
         try{
             val response = apiService.getBooks()

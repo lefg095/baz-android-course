@@ -7,7 +7,7 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("available_books/")
     suspend fun getBooks(
-    ): BaseResponse<Book>
+    ): BaseResponse
 }
 /*
 https://api.bitso.com/v3/available_books/

@@ -20,8 +20,8 @@ constructor(
     private val booksIBookRepository: IBookRepository
 ): ViewModel() {
 
-    private val _booksResponse = MutableLiveData<DataState<BaseResponse<Book>>>()
-    val bookResponse: LiveData<DataState<BaseResponse<Book>>> get() = _booksResponse
+    private val _booksResponse = MutableLiveData<DataState<BaseResponse>>()
+    val bookResponse: LiveData<DataState<BaseResponse>> get() = _booksResponse
 
     fun makeApiCall(booksStateEvent: BooksStateEvent){
         when(booksStateEvent){

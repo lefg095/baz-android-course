@@ -1,9 +1,15 @@
 package com.lefg095.criptoone.domain
 
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-data class BaseResponse<T>(
+data class BaseResponse(
+    @Expose
+    @SerializedName("success")
     var success: String = "",
-    var payload: List<T> = listOf()
+    @Expose
+    @SerializedName("payload")
+    var payload: List<Book> = listOf()
 )
 
 /*"success": true,
