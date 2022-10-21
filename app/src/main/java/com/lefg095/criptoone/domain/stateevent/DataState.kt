@@ -1,4 +1,4 @@
-package com.lefg095.criptoone.domain
+package com.lefg095.criptoone.domain.stateevent
 
 sealed class DataState<out R> {
     data class Success<out T>(val response: T) : DataState<T>()

@@ -7,24 +7,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.lefg095.criptoone.R
-import com.lefg095.criptoone.domain.BooksStateEvent
-import com.lefg095.criptoone.domain.DataState
+import com.lefg095.criptoone.databinding.FragmentDashboardBinding
+import com.lefg095.criptoone.domain.Book
+import com.lefg095.criptoone.domain.stateevent.BooksStateEvent
+import com.lefg095.criptoone.domain.stateevent.DataState
+import com.lefg095.criptoone.ui.adapters.BooksAdapter
+import com.lefg095.criptoone.ui.callbacks.ItemBookCallBack
 import com.lefg095.criptoone.viewmodel.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BlankFragment : Fragment() {
+class DashboardFragment : Fragment(), ItemBookCallBack {
+    private lateinit var binding: FragmentDashboardBinding
     private val bookViewModel by activityViewModels<BookViewModel>()
+    private var adapterBooks: BooksAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_blank, container, false)
 
+        binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,7 +49,9 @@ class BlankFragment : Fragment() {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
                 is DataState.Success -> {
-                    Toast.makeText(requireContext(), "Libros encontrados: ${it.response.payload.size}", Toast.LENGTH_LONG).show()
+                    val textoResp = "Elementos: ${it.response.payload.size}"
+                    binding.et1.text = textoResp
+                    initRecyclerView(it.response.payload)
                 }
                 is DataState.Error -> {
                     Log.e("_ERROR_", "$it.error.message")
@@ -52,11 +64,14 @@ class BlankFragment : Fragment() {
         )
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            BlankFragment().apply {
+    private fun initRecyclerView(books: List<Book>){
+        adapterBooks = BooksAdapter(books, this)
+        binding.rvOne.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rvOne.adapter = adapterBooks
+    }
 
-            }
+    override fun showDetailClicket(book: Book) {
+        val bookBundle = bundleOf("book" to book)
+        view?.findNavController()?.navigate(R.id.detailsFragment, bookBundle)
     }
 }
