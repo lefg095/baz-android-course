@@ -1,15 +1,27 @@
 package com.lefg095.criptoone.domain
 
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "order")
 data class Order(
-    @SerializedName("asks")
+
+    @Expose
+    @ColumnInfo
     var asks: List<Ask>,
-    @SerializedName("bids")
+
+    @Expose
+    @ColumnInfo
     var bids: List<Bid>,
-    @SerializedName("sequence")
+
+    @Expose
+    @ColumnInfo
     var sequence: String,
+
+    @Expose
     @SerializedName("updated_at")
     var updatedAt: String
 )
