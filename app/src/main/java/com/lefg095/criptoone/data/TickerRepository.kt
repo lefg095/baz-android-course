@@ -1,29 +1,31 @@
 package com.lefg095.criptoone.data
 
-import com.lefg095.criptoone.data.interfaces.ITickerRepository
-import com.lefg095.criptoone.di.ApiService
+import com.lefg095.criptoone.di.ApiClient
+import com.lefg095.criptoone.domain.dao.TickerDao
+import com.lefg095.criptoone.domain.model.Ticker
+import com.lefg095.criptoone.domain.response.BaseResponse
 import com.lefg095.criptoone.domain.stateevent.DataState
-import com.lefg095.criptoone.domain.response.TickerResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
+import javax.inject.Inject
 
-class TickerRepository(
-    private val apiService: ApiService
-) : ITickerRepository {
+class TickerRepository
+@Inject
+constructor(
+    private val apiClient: ApiClient,
+    private val tickerDao: TickerDao
+) {
 
-    override fun getTicker(
-        nameBook: String
-    ): Flow<DataState<TickerResponse>> = flow {
-        emit(DataState.Loading("Cargando detalle..."))
-        try {
-            val response = apiService.getTicker(nameBook)
-            emit(DataState.Success(response))
-        }catch (e: Exception){
-            emit(DataState.Error(e))
-        }
+    suspend fun getExternalTicker(nameBook: String) = apiClient.getTicker(nameBook = nameBook)
 
+    fun getLocalticker(nameBook: String) = tickerDao.getTicker(bookName = nameBook)
+
+    fun saveTicker(ticker: Ticker) {
+        tickerDao.saveTicker(ticker = ticker)
     }
 
+    fun cleanTicker(bookName: String){
+        tickerDao.cleanTicker(bookName = bookName)
+    }
 
 }

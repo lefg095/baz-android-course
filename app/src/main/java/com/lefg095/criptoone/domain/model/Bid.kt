@@ -1,4 +1,4 @@
-package com.lefg095.criptoone.domain
+package com.lefg095.criptoone.domain.model
 
 
 import androidx.room.ColumnInfo
@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "bid")
+@Entity(tableName = "bid_table")
 data class Bid(
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0,

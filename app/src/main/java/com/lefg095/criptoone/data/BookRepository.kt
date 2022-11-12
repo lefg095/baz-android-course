@@ -1,26 +1,27 @@
 package com.lefg095.criptoone.data
 
-import com.lefg095.criptoone.data.interfaces.IBookRepository
-import com.lefg095.criptoone.domain.response.BaseResponse
-import com.lefg095.criptoone.domain.stateevent.DataState
-import com.lefg095.criptoone.di.ApiService
-import com.lefg095.criptoone.domain.Book
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.lefg095.criptoone.di.ApiClient
+import com.lefg095.criptoone.domain.dao.BookDao
+import com.lefg095.criptoone.domain.model.Book
+import javax.inject.Inject
 
-class BookRepository(
-    private val apiService: ApiService
-) : IBookRepository {
+class BookRepository
+@Inject
+constructor(
+        private val apiClient: ApiClient,
+        private val bookDao: BookDao
+    ) {
 
-    override fun getBooks(
-    ): Flow<DataState<BaseResponse<Book>>> = flow {
-        emit(DataState.Loading("Cargando elementos..."))
-        try{
-            val response = apiService.getBooks()
-            emit(DataState.Success(response))
-        }catch (e:Exception){
-            emit(DataState.Error(e))
-        }
+    suspend fun getExternalBooks() = apiClient.getBooks()
+
+    fun getLocalBooks() = bookDao.getBook()
+
+    fun saveBooks(books: List<Book>) {
+        bookDao.saveBooks(books)
+    }
+
+    fun cleanBooks(){
+        bookDao.cleanBooks()
     }
 
 }

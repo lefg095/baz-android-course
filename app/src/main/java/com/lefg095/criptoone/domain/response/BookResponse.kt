@@ -1,4 +1,13 @@
 package com.lefg095.criptoone.domain.response
 
-class BookResponse {
-}
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
+data class BookResponse<T>(
+    @Expose
+    @SerializedName("success")
+    var success: String = "",
+    @Expose
+    @SerializedName("payload")
+    var payload: List<T> = listOf()
+)

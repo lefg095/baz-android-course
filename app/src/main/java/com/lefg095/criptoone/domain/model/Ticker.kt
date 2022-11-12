@@ -1,4 +1,4 @@
-package com.lefg095.criptoone.domain
+package com.lefg095.criptoone.domain.model
 
 
 import android.os.Parcelable
@@ -10,9 +10,10 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "ticker")
+@Entity(tableName = "ticker_table")
 data class Ticker(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo
     var uid: Int = 0,
 
     @Expose

@@ -12,19 +12,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.lang.Exception
 
-class BookUseCase @Inject constructor(
+class GetBookUseCaseImpl
+@Inject
+constructor(
     private val repository: BookRepository
 ) {
 
-    suspend fun invoke(
+    suspend operator fun invoke(
         context: Context
       ): Flow<DataState<BookResponse<Book>>> = flow {
           emit(DataState.Loading(MSG))
           try{
               if (isConnectedToNet(context)) {
                   val response = repository.getExternalBooks()
-                  if (response.success == "") {
-                      val books: List<Book> = repository.getExternalBooks().payload
+                  if (response.success == "true") {
+                      val books: List<Book> = response.payload
                       if (books.isNotEmpty()) {
                           repository.cleanBooks()
                           repository.saveBooks(books = books)
@@ -33,11 +35,12 @@ class BookUseCase @Inject constructor(
               }
               emit(
                   DataState.Success(
-                  BookResponse(
-                      success = "",
-                      payload = repository.getLocalBooks()
+                      BookResponse(
+                          success = "",
+                          payload = repository.getLocalBooks()
+                      )
                   )
-              ))
+              )
           }catch (e:Exception){
               emit(DataState.Error(e))
           }

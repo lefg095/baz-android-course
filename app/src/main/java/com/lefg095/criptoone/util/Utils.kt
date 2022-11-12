@@ -1,6 +1,16 @@
 package com.lefg095.criptoone.util
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import com.lefg095.criptoone.R
+
+fun isConnectedToNet(context: Context): Boolean{
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+
+    return activeNetwork != null && activeNetwork.isConnected()
+}
 
 fun getIdResource(coin: String): Int{
     return when(coin){
