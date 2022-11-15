@@ -7,4 +7,6 @@
     <string name="bids_str">Ofertas</string>
     <string name="asks_str">Solicitudes</string>
     <string name="down_price_str">Precio más bajo:</string>
+    <string name="charging_order_str">Cargando ordenes…</string>
+
 </resources>

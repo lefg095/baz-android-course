@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lefg095.criptoone.R
 import com.lefg095.criptoone.databinding.ItemOrderBinding
-import com.lefg095.criptoone.domain.Ask
+import com.lefg095.criptoone.domain.model.Ask
 import java.text.NumberFormat
 import java.util.*
 

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lefg095.criptoone.R
 import com.lefg095.criptoone.databinding.ItemBookBinding
-import com.lefg095.criptoone.domain.Book
+import com.lefg095.criptoone.domain.model.Book
 import com.lefg095.criptoone.ui.callbacks.ItemBookCallBack
 import com.lefg095.criptoone.util.getIdResource
 import com.squareup.picasso.Picasso

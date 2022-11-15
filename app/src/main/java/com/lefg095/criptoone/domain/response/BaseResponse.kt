@@ -9,5 +9,5 @@ data class BaseResponse<T>(
     var success: String = "",
     @Expose
     @SerializedName("payload")
-    var payload: List<T> = listOf()
+    var payload: T? = null
 )

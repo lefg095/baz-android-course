@@ -13,7 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lefg095.criptoone.R
 import com.lefg095.criptoone.databinding.FragmentDashboardBinding
-import com.lefg095.criptoone.domain.Book
+import com.lefg095.criptoone.domain.model.Book
 import com.lefg095.criptoone.domain.stateevent.BooksStateEvent
 import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.ui.adapters.BooksAdapter
@@ -60,7 +60,7 @@ class DashboardFragment : Fragment(), ItemBookCallBack {
             }
         })
         bookViewModel.makeApiCall(
-            BooksStateEvent.GetBooks
+            BooksStateEvent.GetBooks(requireContext())
         )
     }
 

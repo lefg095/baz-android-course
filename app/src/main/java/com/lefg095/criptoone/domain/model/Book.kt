@@ -1,31 +1,45 @@
-package com.lefg095.criptoone.domain
+package com.lefg095.criptoone.domain.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-open class Book(
+@Entity(tableName = "book_table")
+data class Book(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo
+    var uid: Int = 0,
+
     @Expose
-    @SerializedName("book")
+    @ColumnInfo
     var book: String = "",
+
     @Expose
-    @SerializedName("minimum_amount")
+    @ColumnInfo
     var minimum_amount: String = "",
+
     @Expose
-    @SerializedName("maximum_amount")
+    @ColumnInfo
     var maximum_amount: String = "",
+
     @Expose
-    @SerializedName("minimum_price")
+    @ColumnInfo
     var minimum_price: String = "",
+
     @Expose
-    @SerializedName("maximum_price")
+    @ColumnInfo
     var maximum_price: String = "",
+
     @Expose
-    @SerializedName("minimum_value")
+    @ColumnInfo
     var minimum_value: String = "",
+
     @Expose
-    @SerializedName("maximum_value")
+    @ColumnInfo
     var maximum_value: String = ""
 ): Parcelable

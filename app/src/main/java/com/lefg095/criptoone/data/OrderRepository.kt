@@ -1,28 +1,41 @@
 package com.lefg095.criptoone.data
 
-import com.lefg095.criptoone.data.interfaces.IOrderRepository
-import com.lefg095.criptoone.di.ApiService
-import com.lefg095.criptoone.domain.response.OrderResponse
+import com.lefg095.criptoone.di.ApiClient
+import com.lefg095.criptoone.domain.dao.OrderDao
+import com.lefg095.criptoone.domain.model.Ask
+import com.lefg095.criptoone.domain.model.Bid
+import com.lefg095.criptoone.domain.model.Order
+import com.lefg095.criptoone.domain.model.OrderResponse
+import com.lefg095.criptoone.domain.response.BaseResponse
 import com.lefg095.criptoone.domain.stateevent.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.lang.Exception
+import javax.inject.Inject
 
-class OrderRepository(
-    private val apiService: ApiService
-) : IOrderRepository {
+class OrderRepository
+@Inject constructor(
+    private val apiClient: ApiClient,
+    private val orderDao: OrderDao
+) {
 
-    override fun getOrder(
-        nameBook: String
-    ): Flow<DataState<OrderResponse>> = flow{
+    suspend fun getExternalOrder(nameBook: String) = apiClient.getOrders(nameBook = nameBook)
 
-        emit(DataState.Loading("Cargando ordenes..."))
-        try {
-            val response = apiService.getOrders(nameBook)
-            emit(DataState.Success(response))
-        }catch (e: Exception){
-            emit(DataState.Error(e))
-        }
+    fun getLocalOrder(nameBook: String) = orderDao.getOrder(bookName = nameBook)
+
+    fun getLocalAsks(nameBook: String) = orderDao.getAsks(bookName = nameBook)
+
+    fun getLocalBids(nameBook: String) = orderDao.getBids(bookName = nameBook)
+
+    fun saveOrder(order: Order, orderResponse: OrderResponse) {
+        orderDao.saveOrder(order = order)
+        orderDao.saveAsk(askList = orderResponse.asks)
+        orderDao.saveBid(bidList = orderResponse.bids)
     }
 
+    fun cleanData(bookName: String) {
+        orderDao.cleanOrder(bookName = bookName)
+        orderDao.cleanAsks(bookName = bookName)
+        orderDao.cleanBids(bookName = bookName)
+    }
 }
