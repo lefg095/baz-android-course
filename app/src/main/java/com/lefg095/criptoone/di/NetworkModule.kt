@@ -24,12 +24,10 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun providesOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient =
+    fun providesOkHttpClient(): OkHttpClient =
         OkHttpClient
             .Builder()
-            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(LoggingInterceptor())
             .build()
 
     @Singleton

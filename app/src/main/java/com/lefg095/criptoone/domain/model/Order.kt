@@ -18,13 +18,5 @@ data class Order(
 
     @Expose
     @ColumnInfo
-    var book: String,
-
-    @Expose
-    @ColumnInfo
-    var sequence: String,
-
-    @Expose
-    @SerializedName("updated_at")
-    var updatedAt: String
+    var book: String
 )

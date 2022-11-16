@@ -32,20 +32,16 @@ class GetOrderUseCaseImpl
                     baseResponse.payload?.let { baseResponse ->
                         order = Order(
                             book = nameBook,
-                            sequence = baseResponse.sequence,
-                            updatedAt = baseResponse.updatedAt
                         )
                         repository.cleanData(bookName = nameBook)
                         repository.saveOrder(order, baseResponse)
                     }
                 }
             }
-            val order = repository.getLocalOrder(nameBook = nameBook)
+            val order =  repository.getLocalOrder(nameBook = nameBook)
             val response: OrderResponse
             order.let {
                 response = OrderResponse(
-                    sequence = order.sequence,
-                    updatedAt = order.updatedAt,
                     asks = repository.getLocalAsks(nameBook = nameBook),
                     bids = repository.getLocalBids(nameBook = nameBook)
                 )

@@ -10,9 +10,7 @@ import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.stateevent.TickerStateEvent
 import com.lefg095.criptoone.domain.usecase.GetTickerUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,14 +26,12 @@ constructor(
     fun makeApiCall(tickerStateEvent: TickerStateEvent){
         when(tickerStateEvent){
             is TickerStateEvent.GetTicker -> {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        tickerUseCaseImpl.invoke(
-                            bookName = tickerStateEvent.nameBook,
-                            context = tickerStateEvent.context
-                        ).collect{
-                            _tickerResponse.postValue(it)
-                        }
+                viewModelScope.launch(Dispatchers.IO) {
+                    tickerUseCaseImpl.invoke(
+                        bookName = tickerStateEvent.nameBook,
+                        context = tickerStateEvent.context
+                    ).collect{
+                        _tickerResponse.postValue(it)
                     }
                 }
             }

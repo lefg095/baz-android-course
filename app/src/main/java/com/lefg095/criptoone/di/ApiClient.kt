@@ -1,7 +1,6 @@
 package com.lefg095.criptoone.di
 
 import com.lefg095.criptoone.domain.model.Book
-import com.lefg095.criptoone.domain.model.Order
 import com.lefg095.criptoone.domain.model.OrderResponse
 import com.lefg095.criptoone.domain.model.Ticker
 import com.lefg095.criptoone.domain.response.BaseResponse

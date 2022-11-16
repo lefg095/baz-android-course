@@ -13,6 +13,7 @@ import com.lefg095.criptoone.domain.stateevent.OrderStateEvent
 import com.lefg095.criptoone.domain.usecase.GetOrderUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -31,16 +32,17 @@ constructor(
     fun makeApiCall(orderStateEvent: OrderStateEvent){
         when(orderStateEvent){
             is OrderStateEvent.GetOrder -> {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    async {
                         orderUseCaseImpl.invoke(
-                            context = orderStateEvent.context,
-                            nameBook = orderStateEvent.nameBook
-                        ).collect {
-                            _orderResponse.postValue(it)
-                        }
+                                context = orderStateEvent.context,
+                                nameBook = orderStateEvent.nameBook
+                            ).collect {
+                                _orderResponse.postValue(it)
+                            }
                     }
                 }
             }
         }
-    }}
+    }
+}
