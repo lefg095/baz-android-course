@@ -7,10 +7,9 @@ import com.lefg095.criptoone.domain.response.BookResponse
 import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.util.MSG
 import com.lefg095.criptoone.util.isConnectedToNet
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
+import javax.inject.Inject
 
 class GetBookUseCaseImpl
 @Inject

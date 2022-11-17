@@ -4,8 +4,7 @@ import com.lefg095.criptoone.domain.model.Ticker
 
 interface TickerCallBack {
 
-
     fun onLoading(msg: String)
-    fun onError(error: String)
+    fun onError()
     fun onSucess(ticker: Ticker)
 }

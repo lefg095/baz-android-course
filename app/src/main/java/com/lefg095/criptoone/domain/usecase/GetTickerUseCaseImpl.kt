@@ -8,8 +8,6 @@ import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.util.isConnectedToNet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import rx.Observable
-import java.lang.Exception
 import javax.inject.Inject
 
 class GetTickerUseCaseImpl

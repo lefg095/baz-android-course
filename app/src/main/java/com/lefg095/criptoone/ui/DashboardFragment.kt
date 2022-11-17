@@ -12,25 +12,32 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lefg095.criptoone.R
+import com.lefg095.criptoone.data.TickerRepository
+import com.lefg095.criptoone.data.presenter.TickerPresenter
 import com.lefg095.criptoone.databinding.FragmentDashboardBinding
 import com.lefg095.criptoone.domain.model.Book
+import com.lefg095.criptoone.domain.model.Ticker
 import com.lefg095.criptoone.domain.stateevent.BooksStateEvent
 import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.stateevent.TickerStateEvent
 import com.lefg095.criptoone.ui.adapters.BooksAdapter
 import com.lefg095.criptoone.ui.callbacks.ItemBookCallBack
-import com.lefg095.criptoone.util.alertWarning
-import com.lefg095.criptoone.util.alertWarningDash
+import com.lefg095.criptoone.ui.callbacks.TickerCallBack
+import com.lefg095.criptoone.util.isConnectedToNet
 import com.lefg095.criptoone.viewmodel.BookViewModel
 import com.lefg095.criptoone.viewmodel.TickerViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(), ItemBookCallBack {
+class DashboardFragment : Fragment(), ItemBookCallBack, TickerCallBack {
     private lateinit var binding: FragmentDashboardBinding
     private val bookViewModel by activityViewModels<BookViewModel>()
     private val tickerViewModel by activityViewModels<TickerViewModel>()
     private var adapterBooks: BooksAdapter? = null
+    @Inject lateinit var tickerRepository: TickerRepository
+    val presenter: TickerPresenter by lazy { TickerPresenter(this, requireContext(), tickerRepository) }
+    lateinit var book: Book
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,10 +61,20 @@ class DashboardFragment : Fragment(), ItemBookCallBack {
     }
 
     override fun showDetailClicket(book: Book) {
-        subscribeTickerObserver(book)
+        this.book = book
+        if (isConnectedToNet(requireContext())) {
+            getTickerWhitRx()
+        }else{
+            subscribeTickerObserver()
+        }
     }
 
-    private fun subscribeTickerObserver(book: Book){
+    private fun getTickerWhitRx(){
+        presenter.getTicker(book.book)
+    }
+
+    private fun subscribeTickerObserver(){
+
         tickerViewModel.tickerResponse.observe(viewLifecycleOwner, {
             when(it){
                 is DataState.Loading -> {
@@ -98,5 +115,23 @@ class DashboardFragment : Fragment(), ItemBookCallBack {
         bookViewModel.makeApiCall(
             BooksStateEvent.GetBooks(requireContext())
         )
+    }
+
+    override fun onLoading(msg: String) {
+        Log.i("getTicker_", "onLoading")
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onError() {
+        Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onSucess(ticker: Ticker) {
+        tickerViewModel.makeApiCall(
+            TickerStateEvent.SaveTicker(ticker)
+        )
+        Toast.makeText(requireContext(), "onSucess, todo ok con Rx!!", Toast.LENGTH_LONG).show()
+        val bookBundle = bundleOf("book" to book, "ticker" to ticker)
+        view?.findNavController()?.navigate(R.id.detailsFragment, bookBundle)
     }
 }

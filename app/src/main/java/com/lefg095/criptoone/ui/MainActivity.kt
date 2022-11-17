@@ -1,10 +1,8 @@
 package com.lefg095.criptoone.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.lefg095.criptoone.databinding.ActivityMainBinding
-import com.lefg095.criptoone.viewmodel.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

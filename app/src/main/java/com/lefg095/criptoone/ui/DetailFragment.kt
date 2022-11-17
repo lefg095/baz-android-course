@@ -13,14 +13,14 @@ import com.lefg095.criptoone.databinding.FragmentDetailBinding
 import com.lefg095.criptoone.domain.model.Book
 import com.lefg095.criptoone.domain.model.OrderResponse
 import com.lefg095.criptoone.domain.model.Ticker
-import dagger.hilt.android.AndroidEntryPoint
-import java.text.NumberFormat
 import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.stateevent.OrderStateEvent
 import com.lefg095.criptoone.ui.adapters.AskAdapter
 import com.lefg095.criptoone.ui.adapters.BidAdapter
 import com.lefg095.criptoone.util.alertWarning
 import com.lefg095.criptoone.viewmodel.OrderViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.NumberFormat
 import java.util.*
 
 @AndroidEntryPoint

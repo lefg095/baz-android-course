@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lefg095.criptoone.domain.stateevent.BooksStateEvent
-import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.model.Book
 import com.lefg095.criptoone.domain.response.BookResponse
+import com.lefg095.criptoone.domain.stateevent.BooksStateEvent
+import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.usecase.GetBookUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
