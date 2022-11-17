@@ -9,7 +9,7 @@ import com.lefg095.criptoone.domain.model.*
 
 @Database(entities = [Book::class, Ticker::class,
             Order::class, Bid::class, Ask::class]
-    , version = 4, exportSchema = false)
+    , version = 6, exportSchema = false)
 abstract class CoinOneDatabase : RoomDatabase() {
 
     abstract fun bookDao(): BookDao

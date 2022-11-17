@@ -13,7 +13,7 @@ interface TickerDao {
     fun saveTicker(ticker: Ticker)
 
     @Query("SELECT * FROM ticker_table WHERE book = :bookName")
-    fun getTicker(bookName: String): Ticker
+    fun getTicker(bookName: String): Ticker?
 
     @Query("DELETE FROM ticker_table WHERE book = :bookName")
     fun cleanTicker(bookName: String)

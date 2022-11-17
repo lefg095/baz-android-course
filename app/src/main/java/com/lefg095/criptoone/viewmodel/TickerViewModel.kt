@@ -9,17 +9,18 @@ import com.lefg095.criptoone.domain.response.BaseResponse
 import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.stateevent.TickerStateEvent
 import com.lefg095.criptoone.domain.usecase.GetTickerUseCaseImpl
+import com.lefg095.criptoone.domain.usecase.SaveTickerUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class TickerViewModel
 @Inject
 constructor(
-    private val tickerUseCaseImpl: GetTickerUseCaseImpl
+    private val getTickerUseCaseImpl: GetTickerUseCaseImpl,
+    private val saveTickerUseCaseImpl: SaveTickerUseCaseImpl
 ): ViewModel(){
 
     private val _tickerResponse = MutableLiveData<DataState<BaseResponse<Ticker>>>()
@@ -28,17 +29,25 @@ constructor(
     fun makeApiCall(tickerStateEvent: TickerStateEvent){
         when(tickerStateEvent){
             is TickerStateEvent.GetTicker -> {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        tickerUseCaseImpl.invoke(
-                            bookName = tickerStateEvent.nameBook,
-                            context = tickerStateEvent.context
-                        ).collect{
-                            _tickerResponse.postValue(it)
-                        }
+                viewModelScope.launch(Dispatchers.IO) {
+                    getTickerUseCaseImpl.invoke(
+                        bookName = tickerStateEvent.nameBook,
+                        context = tickerStateEvent.context
+                    ).collect{
+                        _tickerResponse.postValue(it)
                     }
+                }
+            }
+
+            is TickerStateEvent.SaveTicker -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    saveTickerUseCaseImpl.invoke(
+                        ticker = tickerStateEvent.ticker
+                    )
                 }
             }
         }
     }
+
+
 }

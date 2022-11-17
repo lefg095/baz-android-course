@@ -12,8 +12,8 @@ fun isConnectedToNet(context: Context): Boolean{
     return activeNetwork != null && activeNetwork.isConnected()
 }
 
-fun getIdResource(coin: String): Int{
-    return when(coin){
+fun String.getIdResource(): Int{
+    return when(this){
         "btc" -> R.drawable.btc
         "eth" -> R.drawable.eth
         "xrp" -> R.drawable.xrp

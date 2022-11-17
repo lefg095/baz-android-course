@@ -33,7 +33,7 @@ class BooksAdapter(
         private val binding = ItemBookBinding.bind(view)
         fun bind(book: Book, mCallback: ItemBookCallBack){
             binding.tvBookName.text = book.book.uppercase()
-            Picasso.get().load(getIdResource(book.book.split("_")[0])).into(binding.imageView)
+            Picasso.get().load(book.book.split("_")[0].getIdResource()).into(binding.imageView)
             binding.lyBook.setOnClickListener {
                 mCallback.showDetailClicket(book)
             }

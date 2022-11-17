@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lefg095.criptoone.data.interfaces.IOrderRepository
-import com.lefg095.criptoone.domain.model.Order
 import com.lefg095.criptoone.domain.model.OrderResponse
 import com.lefg095.criptoone.domain.response.BaseResponse
 import com.lefg095.criptoone.domain.stateevent.DataState
@@ -13,8 +11,8 @@ import com.lefg095.criptoone.domain.stateevent.OrderStateEvent
 import com.lefg095.criptoone.domain.usecase.GetOrderUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -31,16 +29,17 @@ constructor(
     fun makeApiCall(orderStateEvent: OrderStateEvent){
         when(orderStateEvent){
             is OrderStateEvent.GetOrder -> {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    async {
                         orderUseCaseImpl.invoke(
-                            context = orderStateEvent.context,
-                            nameBook = orderStateEvent.nameBook
-                        ).collect {
-                            _orderResponse.postValue(it)
-                        }
+                                context = orderStateEvent.context,
+                                nameBook = orderStateEvent.nameBook
+                            ).collect {
+                                _orderResponse.postValue(it)
+                            }
                     }
                 }
             }
         }
-    }}
+    }
+}

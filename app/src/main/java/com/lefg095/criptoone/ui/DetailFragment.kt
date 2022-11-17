@@ -11,31 +11,27 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lefg095.criptoone.databinding.FragmentDetailBinding
 import com.lefg095.criptoone.domain.model.Book
-import com.lefg095.criptoone.domain.model.Order
 import com.lefg095.criptoone.domain.model.OrderResponse
 import com.lefg095.criptoone.domain.model.Ticker
-import com.lefg095.criptoone.viewmodel.TickerViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import java.text.NumberFormat
 import com.lefg095.criptoone.domain.stateevent.DataState
 import com.lefg095.criptoone.domain.stateevent.OrderStateEvent
-import com.lefg095.criptoone.domain.stateevent.TickerStateEvent
 import com.lefg095.criptoone.ui.adapters.AskAdapter
 import com.lefg095.criptoone.ui.adapters.BidAdapter
 import com.lefg095.criptoone.util.alertWarning
 import com.lefg095.criptoone.viewmodel.OrderViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.NumberFormat
 import java.util.*
-
 
 @AndroidEntryPoint
 class DetailFragment: Fragment() {
     lateinit var binding: FragmentDetailBinding
-    private val tickerviewModel by activityViewModels<TickerViewModel>()
     private val orderViewModel by activityViewModels<OrderViewModel>()
     private var adapterAsk: AskAdapter? = null
     private var adapterBids: BidAdapter? = null
 
     var book: Book? = null
+    var ticker: Ticker? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +44,9 @@ class DetailFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        book = requireArguments().getParcelable<Book>("book")
-        subscribeTickerObservers()
+        book = requireArguments().getParcelable("book")
+        ticker = requireArguments().getParcelable("ticker")
+        printDataScreen(book!!, ticker)
     }
 
     private fun subscribeOrderObservers() {
@@ -72,61 +69,39 @@ class DetailFragment: Fragment() {
         )
     }
 
-    private fun subscribeTickerObservers() {
-        tickerviewModel.tickerResponse.observe(viewLifecycleOwner, {
-            when(it){
-                is DataState.Loading -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                }
-                is DataState.Success -> {
-                    val payload = it.response.payload
-                    payload?.let {
-                        printDataScreen(book!!, payload)
-                    }
-                    if (it.response.payload?.createdAt.isNullOrEmpty()){
-                        showAlert()
-                    }
-
-                }
-                is DataState.Error -> {
-                    Log.e("_ERROR_", "$it.error.message")
-                    Toast.makeText(requireContext(), it.error.message, Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-        tickerviewModel.makeApiCall(
-            TickerStateEvent.GetTicker(nameBook = book!!.book, context = requireContext())
-        )
-
-    }
-
-    fun printDataScreen(book: Book, ticker: Ticker){
+    fun printDataScreen(book: Book, ticker: Ticker?){
         val numberFormat = NumberFormat.getCurrencyInstance(Locale("es", "US"))
-        Log.i("createdAt: ", ticker.createdAt)
-        binding.tvDetail.text = ticker.createdAt
-        binding.tvHighPrice.text = numberFormat.format(book.maximum_price.toFloat())
-        binding.tvLastPrice.text = numberFormat.format(ticker.last.toFloat())
-        binding.tvDownPrice.text = numberFormat.format(book.minimum_price.toFloat())
+        Log.i("createdAt: ", ticker?.createdAt ?: "")
+        if (ticker != null) {
+            subscribeOrderObservers()
+            binding.tvDetail.text = ticker.createdAt
+            binding.tvHighPrice.text = numberFormat.format(book.maximum_price.toFloat())
+            binding.tvLastPrice.text = numberFormat.format((ticker?.last ?: "0.0").toFloat())
+            binding.tvDownPrice.text = numberFormat.format(book.minimum_price.toFloat())
 
-        subscribeOrderObservers()
-
+        }else {
+            showAlert()
+            binding.tvHighPrice.text = ""
+            binding.tvDownPrice.text = ""
+        }
     }
 
     private fun printBidsAsks(order: OrderResponse) {
-        if (order.asks.isNotEmpty()) {
+        if (order.asks.isNotEmpty() && order.bids.isNotEmpty()) {
             adapterAsk = AskAdapter(order.asks)
             binding.rvAsks.layoutManager = LinearLayoutManager(requireContext())
             binding.rvAsks.adapter = adapterAsk
-        }
-        if (order.bids.isNotEmpty()) {
+
             adapterBids = BidAdapter(order.bids)
             binding.rvBids.layoutManager = LinearLayoutManager(requireContext())
             binding.rvBids.adapter = adapterBids
+        }else {
+            showAlert()
         }
     }
 
     fun showAlert() {
-        alertWarning(requireContext(), "Sin detalle.", "No se encontraron datos.", parentFragmentManager)
+        alertWarning(requireContext(), "Sin detalle.", "No se encontraron datos.", parentFragmentManager, this)
     }
 
 }
